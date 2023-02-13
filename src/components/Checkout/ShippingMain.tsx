@@ -3,8 +3,8 @@ import { useState, useEffect, useContext } from "react";
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from "@stripe/react-stripe-js";
 
-import {trpc} from "@/utils/trpc";
-import {OrderSummary, ShippingInfo, CheckoutForm} from "@/components"
+import { trpc } from "@/utils/trpc";
+import { OrderSummary, ShippingInfo, CheckoutForm } from "@/components"
 import { CartContext } from "@/context/CartContext";
 import { OrderContext } from "@/context/OrderContext";
 
@@ -22,7 +22,7 @@ export default function ShippingMain() {
 
     //FETCH DATA REQUEST
     const { cart } = useContext(CartContext);
-    const { paymentMethod } = useContext(OrderContext);
+    const { openStripe, openPaypal } = useContext(OrderContext);
     const [clientSecret, setClientSecret] = useState("");
     const {mutate:makeIntent} = trpc.StripePaymentIntent.useMutation({
         onSuccess:(secret)=> { 
@@ -49,11 +49,18 @@ export default function ShippingMain() {
             <div className="flex items-center justify-center h-full w-full p-3 m-5 bg-black">
                 <ShippingInfo />
                 <OrderSummary />
-                { paymentMethod === "Stripe" && clientSecret && (
-                    <Elements options={options} stripe={stripePromise}>
-                      <CheckoutForm />
-                    </Elements>
+                { openStripe && clientSecret && (
+                    <div className="flex absolute h-full w-full items-center justify-center bg-opacity-80 bg-gray-400">
+                        <Elements options={options} stripe={stripePromise}>
+                          <CheckoutForm />
+                        </Elements>
+                    </div>
                 ) }
+                {   openPaypal && (
+                        <div>
+                            Paypal
+                        </div>
+                )   }
             </div>
         </div>
     );

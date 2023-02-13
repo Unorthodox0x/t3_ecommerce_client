@@ -10,4 +10,5 @@ export declare interface ICartContext {
 	setTotalValue: Dispatch<SetStateAction<number>>
 	addItem: (item: Item|undefined) => void,
 	removeItem: (cart: Item[], item: Item) => void,
+	emptyCart: () => void,
 }

@@ -29,8 +29,6 @@ const NavBar: React.FunctionComponent = () => {
 		link: "/contact"
 	}]
 
-	console.log('openMobile', openMobile)
-
     return (
         <div className="flex h-32 w-full mx-auto p-5 bg-black shadow-xl justify-between">
 

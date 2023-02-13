@@ -2,7 +2,9 @@ import React, { useState, createContext } from "react";
 import {
 	defaultOrder, defaultOrderContext,
 	IOrderContext, IOrder
-} from "../models/index"
+} from "@/models"
+import {useForm} from "react-hook-form";
+
 // import {selectableCountries} from "../utils/constants/index"
 
 /**
@@ -12,65 +14,33 @@ import {
 export const OrderContext = createContext<IOrderContext>(defaultOrderContext);
 
 export const OrderContextProvider = ({ children }) => {
-	//ACTIVE CART
-	// const [cartItems, setCartItems] = useState<CartItem[]>(defaultCartItem)
+
+	const ShippingForm = useForm();
 
 	//SINGLE ORDER VARS
 	const [order, setOrder] = useState<IOrder>(defaultOrder)
 	const [message, setMessage] = useState<string>("");
-	const [email, setEmail] = useState<string>(defaultOrder.email);
-	const [firstName, setFirstName] = useState<string>(defaultOrder.firstName)
-	const [lastName, setLastName] = useState<string>(defaultOrder.lastName)
-	const [country, setCountry] = useState<string>(defaultOrder.country)
-	const [stateProvince, setStateProvince] = useState<string>(defaultOrder.stateProvince)
-	const [city, setCity] = useState<string>(defaultOrder.city)
-	const [address1, setAddress1] = useState<string>(defaultOrder.address1)
-	const [address2, setAddress2] = useState<string>(defaultOrder.address2)
-	const [zipcode, setZipcode] = useState<string>(defaultOrder.zipcode)
 	const [paymentMethod, setPaymentMethod] = useState<string>(defaultOrder.paymentMethod)
 	const [totalPrice, setTotalPrice] = useState<number>(defaultOrder.totalPrice)
-	// const [shippingCost, setShippingCost] =useState<number>(defaultOrder.shippingCost);
-	// const [shipped, setShipped] =useState<boolean>(defaultOrder.shipped);
-	// const [received, setReceived] =useState<boolean>(defaultOrder.received);
-	
-	const createOrder = async():Promise<void> => {
-		return;
-	}
-
-	// const orderPreview = () => {
-		
-	// }
+	const [openStripe, setOpenStripe] = useState<boolean>(false);
+	const [openPaypal, setOpenPaypal] = useState<boolean>(false);
 
 	return(
 		<OrderContext.Provider
 			value={{
 				order,
 				setOrder,
-				email,
-				setEmail,
 				message,
 				setMessage,
-				firstName,
-				setFirstName,
-				lastName,
-				setLastName,
-				country,
-				setCountry,
-				stateProvince,
-				setStateProvince,
-				city,
-				setCity,
-				address1,
-				setAddress1,
-				address2,
-				setAddress2,
-				zipcode,
-				setZipcode,
+				ShippingForm,
 				paymentMethod,
 				setPaymentMethod,
 				totalPrice,
 				setTotalPrice,
-				createOrder
+				openStripe,
+				setOpenStripe,
+				openPaypal,
+				setOpenPaypal,
 			}}
 		>
 			{children}

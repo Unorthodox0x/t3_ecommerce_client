@@ -28,12 +28,21 @@ export const CartProvider = ({ children }) => {
         if(filtered.length>0) return;
         setCart((cart): Item[] => [...cart, item]);
         setTotalValue(totalValue + item.price);
+        localStorage.setItem("cart", JSON.stringify([...cart, item]));
     }
 
     function removeItem(cart: Item[], item: Item):void {
         const filtered:Item[] = cart.filter((el:Item) => el.id !== item.id);
+        console.log('filtered', filtered)
         setCart(filtered);
         setTotalValue(totalValue - item.price);
+        localStorage.setItem("cart", JSON.stringify(filtered));
+    }
+
+    function emptyCart():void {
+        setCart([]);
+        localStorage.removeItem("cart")
+        return;
     }
 
     /**
@@ -43,6 +52,7 @@ export const CartProvider = ({ children }) => {
      */
     useEffect(() => {
         const cartData:Item[] = JSON.parse(localStorage.getItem("cart"));
+        console.log('cartData', cartData)
         if (cartData) {
             setCart(cartData);
             let value = 0;
@@ -51,17 +61,7 @@ export const CartProvider = ({ children }) => {
             }
             setTotalValue(value);
         }
-
     }, []);
-
-    /**
-     * UPDATE LOCAL STORAGE ANY TIME CART IS UPDATED
-     */
-    useEffect(() => {
-        if (cart.length !== 0) {
-            localStorage.setItem("cart", JSON.stringify(cart));
-        }
-    }, [cart]);
 
     return (
         <CartContext.Provider
@@ -74,6 +74,7 @@ export const CartProvider = ({ children }) => {
                 setTotalValue,
                 addItem,
                 removeItem,
+                emptyCart,
             }}
         >
             {children}

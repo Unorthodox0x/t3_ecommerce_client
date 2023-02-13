@@ -31,8 +31,8 @@ export default function GalleryItem(props:CustomPageProps) {
 					src={item?.img ? item?.img: images.Logo} 
 					alt="Item Image" 
 					className="absolute backface-hidden"
-					height={428}
-					width={350}
+					height={420}
+					width={420}
 				/>
 				<div className="flex absolute backface-hidden h-full w-full items-start justify-center">
 					<h1 className="flex absolute backface-hidden h-10 w-52 my-8 justify-center items-center text-2xl border-2 border-black bg-gray-300">
