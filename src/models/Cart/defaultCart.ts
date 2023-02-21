@@ -2,11 +2,12 @@ import {ICartContext} from "./Cart";
 
 export const defaultCartContext:ICartContext = {
 	openMenu: false,
-	setOpenMenu: () => {},
+	setOpenMenu: () => false,
+	clientSecret: "",
 	cart: [],
-	setCart: () => {},
+	setCart: () => [],
 	totalValue: 0,
-	setTotalValue: () => {},
-	addItem: () => {},
-	removeItem: () => {}	
+	setTotalValue: () => 0,
+	addItem: () => [],
+	removeItem: () => [],
 }

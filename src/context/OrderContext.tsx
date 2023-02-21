@@ -1,10 +1,9 @@
 import React, { useState, createContext } from "react";
 import {
-	defaultOrder, defaultOrderContext,
-	IOrderContext, IOrder
+	defaultOrderContext,
+	IOrderContext
 } from "@/models"
 import {useForm} from "react-hook-form";
-
 // import {selectableCountries} from "../utils/constants/index"
 
 /**
@@ -15,28 +14,30 @@ export const OrderContext = createContext<IOrderContext>(defaultOrderContext);
 
 export const OrderContextProvider = ({ children }) => {
 
-	const ShippingForm = useForm();
+	const ShippingForm = useForm(); //imported in checkoutForm
+	const {watch} = ShippingForm;
+	const paymentMethod = watch("payment_method");
+	const email = watch('email');
 
 	//SINGLE ORDER VARS
-	const [order, setOrder] = useState<IOrder>(defaultOrder)
-	const [message, setMessage] = useState<string>("");
-	const [paymentMethod, setPaymentMethod] = useState<string>(defaultOrder.paymentMethod)
-	const [totalPrice, setTotalPrice] = useState<number>(defaultOrder.totalPrice)
+	const [message, setMessage] = useState<string>("");	
+	const [totalPrice, setTotalPrice] = useState<number>(0)
 	const [openStripe, setOpenStripe] = useState<boolean>(false);
 	const [openPaypal, setOpenPaypal] = useState<boolean>(false);
 
 	return(
 		<OrderContext.Provider
 			value={{
-				order,
-				setOrder,
 				message,
 				setMessage,
+				email,
+				//form
 				ShippingForm,
-				paymentMethod,
-				setPaymentMethod,
 				totalPrice,
 				setTotalPrice,
+
+				//Payment modals
+				paymentMethod,
 				openStripe,
 				setOpenStripe,
 				openPaypal,

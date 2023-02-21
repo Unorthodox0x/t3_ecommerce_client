@@ -24,12 +24,13 @@ export declare interface IItemContext {
 export declare interface Item {
   id: string
   name: string
-  img: string|null
+  img: StaticImageData|string|null
   imgLocation?: string|null|undefined
   price: number
   quantity: number
   itemType: string
   subType: string
   description: string
-  createdAt: string
+  orderId?: string|undefined
+  createdAt?: string
 }

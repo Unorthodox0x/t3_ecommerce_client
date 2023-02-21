@@ -23,7 +23,6 @@ export default function ShippingInfo() {
     const {
         ShippingForm,
         paymentMethod,
-        setPaymentMethod,
         setOpenStripe,
         setOpenPaypal
     } = useContext(OrderContext);
@@ -34,9 +33,8 @@ export default function ShippingInfo() {
     const { register, handleSubmit, formState} = ShippingForm;
     const { errors } = formState;
     
-    function submitForm(formValues) {
+    function submitForm() {
         if(Object.keys(errors).length > 0) return;
-        
         //signal open Stripe || Paypal
         switch(paymentMethod){
             case paymentType.stripe: 
@@ -279,7 +277,7 @@ export default function ShippingInfo() {
                             {/* STRIPE */}
                             <div 
                                 className="flex w-24 h-12 mx-1 rounded-lg border-2 border-black cursor:pointer"
-                                onClick={() => { setPaymentMethod("Stripe") }}
+                                onClick={() => (ShippingForm.setValue("payment_method", paymentType.stripe) )}
                             >
                                 {/*Stripe LOGO*/}
                                 <span
@@ -297,7 +295,7 @@ export default function ShippingInfo() {
                             {/* PAYPAL */}
                             <div
                                 className="flex w-24 h-12 mx-1 rounded-lg border-2 border-black cursor:pointer"
-                                onClick={() => { setPaymentMethod("PayPal") }}
+                                onClick={() => (ShippingForm.setValue("payment_method", paymentType.paypal) )}
                             >
                                 {/*PayPal LOGO*/}
                                 <span

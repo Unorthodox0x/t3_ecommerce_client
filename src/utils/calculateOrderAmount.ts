@@ -1,7 +1,7 @@
-import {Item} from "@/models";
+import {ICartItem} from "@/models";
 
-export default function calculateOrderAmount(items:Item[]):number {
+export default function calculateOrderAmount(items:ICartItem[]):number {
 	let sum = 0;
-	items.map((item:Item) => (sum += item.price));
+	items.map((item:ICartItem) => (sum += item.price));
 	return sum
 }

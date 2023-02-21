@@ -1,9 +1,7 @@
-import { useState, useEffect, useContext } from "react";
-
+import { useContext } from "react";
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from "@stripe/react-stripe-js";
 
-import { trpc } from "@/utils/trpc";
 import { OrderSummary, ShippingInfo, CheckoutForm } from "@/components"
 import { CartContext } from "@/context/CartContext";
 import { OrderContext } from "@/context/OrderContext";
@@ -21,21 +19,9 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY 
 export default function ShippingMain() {
 
     //FETCH DATA REQUEST
-    const { cart } = useContext(CartContext);
+    const { clientSecret } = useContext(CartContext);
     const { openStripe, openPaypal } = useContext(OrderContext);
-    const [clientSecret, setClientSecret] = useState("");
-    const {mutate:makeIntent} = trpc.StripePaymentIntent.useMutation({
-        onSuccess:(secret)=> { 
-            if(typeof secret === "string"){
-                setClientSecret(secret)}
-            }
-    })
     
-    useEffect(()=>{
-        if(!cart) return;
-        makeIntent({ cart })        
-    },[cart, makeIntent])
-
     const appearance = {
         theme: 'stripe',
     };

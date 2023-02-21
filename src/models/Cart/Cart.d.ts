@@ -1,14 +1,29 @@
 import {Dispatch, SetStateAction} from "react";
-import {Item} from "../index";
+import {ICartItem} from "../index";
 
 export declare interface ICartContext {
-	cart:  Item[]
-	setCart: Dispatch<SetStateAction<Item[]>>
+	cart:  ICartItem[]
+	setCart: Dispatch<SetStateAction<ICartItem[]>>
+	clientSecret: string|null|undefined
+	customerId: string
 	openMenu: boolean
 	setOpenMenu: Dispatch<SetStateAction<boolean>>
 	totalValue: number
 	setTotalValue: Dispatch<SetStateAction<number>>
-	addItem: (item: Item|undefined) => void,
-	removeItem: (cart: Item[], item: Item) => void,
+	addItem: (item: ICartItem|undefined) => void,
+	removeItem: (cart: ICartItem[], item: ICartItem) => void,
 	emptyCart: () => void,
+}
+
+export declare interface ICartItem {
+	id: string
+	name: string
+	img: string
+	price: number
+	quantity: number
+	itemType: string
+	subType: string
+	description: string
+	orderId?: string|undefined
+	createdAt: string|datetime
 }

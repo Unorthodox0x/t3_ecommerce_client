@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useContext, FormEvent } from "react";
 import {
     PaymentElement,
     useStripe,
@@ -6,8 +6,9 @@ import {
 } from "@stripe/react-stripe-js";
 import Image from "next/image";
 import images from "@/Assets";
-import { OrderContext } from "@/context/OrderContext";
 import { CartContext } from "@/context/CartContext";
+import { OrderContext } from "@/context/OrderContext";
+import {trpc} from "@/utils/trpc";
 
 export default function CheckoutForm() {
 
@@ -15,43 +16,11 @@ export default function CheckoutForm() {
     const elements = useElements();
     const [message, setMessage] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const { ShippingForm, setOpenStripe, createOrder } = useContext(OrderContext);
-    const { emptyCart } = useContext(CartContext);
-    const { reset } = ShippingForm;
+    const { email, setOpenStripe, ShippingForm } = useContext(OrderContext);
+    const {mutate:createOrder} = trpc.createOrder.useMutation({});
+    const { cart, customerId } = useContext(CartContext);
 
-    useEffect(() => {
-        if (!stripe) {
-            return;
-        }
-
-        const clientSecret = new URLSearchParams(window.location.search).get(
-            "payment_intent_client_secret"
-        );
-
-        if (!clientSecret) {
-            return;
-        }
-
-        stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }): void => {
-            if (!paymentIntent) return;
-            switch (paymentIntent.status) {
-                case "succeeded":
-                    setMessage("Payment succeeded!");
-                    break;
-                case "processing":
-                    setMessage("Your payment is processing.");
-                    break;
-                case "requires_payment_method":
-                    setMessage("Your payment was not successful, please try again.");
-                    break;
-                default:
-                    setMessage("Something went wrong.");
-                    break;
-            }
-        });
-    }, [stripe]);
-
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e:FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (!stripe || !elements) {
             // Stripe.js has not yet loaded.
@@ -60,18 +29,18 @@ export default function CheckoutForm() {
         }
 
         setIsLoading(true);
-
+        createOrder({ ShippingForm, cart, customerId });
         const { error } = await stripe.confirmPayment({
             elements,
             confirmParams: {
-                // Make sure to change this to your payment completion page
                 return_url: `${process.env.NEXT_PUBLIC_HOST_NAME}/order_successful`,
+                receipt_email: email,
             },
-        });
+        })
 
         // This point will only be reached if there is an immediate error when
         // confirming the payment. Otherwise, your customer will be redirected to
-        // your `return_url`. For some payment methods like iDEAL, your customer will
+        // the `return_url`. For some payment methods like iDEAL, your customer will
         // be redirected to an intermediate site first to authorize the payment, then
         // redirected to the `return_url`.
         if (error.type === "card_error" || error.type === "validation_error") {
@@ -80,11 +49,6 @@ export default function CheckoutForm() {
             setMessage("An unexpected error occurred.");
         }
 
-        //reset all data
-        //Form
-        reset();
-        //Client_State + Cookie
-        localStorage.setItem("cart", JSON.stringify([]));
         setIsLoading(false);
     };
 

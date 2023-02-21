@@ -1,10 +1,9 @@
 import React, { useState, createContext, useEffect } from "react";
 import {
-    ICartContext,
-    Item,
+    ICartContext, ICartItem,
     defaultCartContext,
 } from "../models/index"
-
+import {trpc} from "@/utils/trpc"
 /**
  * This Context is used to collect shipping information from user
  *     and call server function to 
@@ -16,32 +15,45 @@ export const CartContext = createContext<ICartContext>(defaultCartContext);
 
 export const CartProvider = ({ children }) => {
 
-    const [cart, setCart] = useState<Item[]>([]);
+    const utils = trpc.useContext();
+    const [cart, setCart] = useState<ICartItem[]>([]);
     const [totalValue, setTotalValue] = useState<number>(defaultCartContext.totalValue);
     const [openMenu, setOpenMenu] = useState<boolean>(defaultCartContext.openMenu);
+    const [clientSecret, setClientSecret] = useState<string>("");
+    const [customerId, setCustomerId] = useState<string>("");
+
+    const { data, refetch:refetchStripeIntent } = trpc.StripePaymentIntent.useQuery({ cart });
+    useEffect(()=> {
+        if(!data || !data?.clientSecret || !data?.customerId) return
+        setClientSecret(data?.clientSecret)
+        setCustomerId(data?.customerId);
+    },[data])    
 
     //** SET A CONDITIONAL FLAG FOR INDIVIDUAL ITEMS, 
     //** CAN AN ITEM BE ADDED TO CART MORE THAN ONCE
-    function addItem(item: Item|undefined):void {
+    function addItem(item: ICartItem|undefined):void {
         if (item === undefined) return;
-        const filtered: Item[] = cart.filter((el:Item) => el.id === item.id);
+        const filtered: ICartItem[] = cart.filter((el:ICartItem) => el.id === item.id);
         if(filtered.length>0) return;
-        setCart((cart): Item[] => [...cart, item]);
+        setCart((cart): ICartItem[] => [...cart, item]);
         setTotalValue(totalValue + item.price);
         localStorage.setItem("cart", JSON.stringify([...cart, item]));
+        refetchStripeIntent()
     }
 
-    function removeItem(cart: Item[], item: Item):void {
-        const filtered:Item[] = cart.filter((el:Item) => el.id !== item.id);
+    function removeItem(cart: ICartItem[], item: ICartItem):void {
+        const filtered:ICartItem[] = cart.filter((el:ICartItem) => el.id !== item.id);
         console.log('filtered', filtered)
         setCart(filtered);
         setTotalValue(totalValue - item.price);
         localStorage.setItem("cart", JSON.stringify(filtered));
+        refetchStripeIntent()
     }
 
     function emptyCart():void {
         setCart([]);
         localStorage.removeItem("cart")
+        utils.StripePaymentIntent.reset();
         return;
     }
 
@@ -51,7 +63,7 @@ export const CartProvider = ({ children }) => {
      * 2. PRESERVES VALUE OF ALL ITEMS IN CART 
      */
     useEffect(() => {
-        const cartData:Item[] = JSON.parse(localStorage.getItem("cart"));
+        const cartData:ICartItem[] = JSON.parse(localStorage.getItem("cart"));
         console.log('cartData', cartData)
         if (cartData) {
             setCart(cartData);
@@ -66,6 +78,8 @@ export const CartProvider = ({ children }) => {
     return (
         <CartContext.Provider
             value={{
+                clientSecret,
+                customerId,
                 openMenu,
                 setOpenMenu,
                 cart,

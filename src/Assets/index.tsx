@@ -15,6 +15,7 @@ import ProtonMailLogo from "./Images/ProtonMailLogo.png";
 import TwitterLogo from "./Images/TwitterLogo.png";
 import LinkedInLogo from "./Images/LinkedInLogo.png"
 import Hamburger from "./Images/Hamburger_icon.png";
+import Loading from "./Images/loading.gif";
 
 const images = {
 	AddSign,
@@ -33,7 +34,8 @@ const images = {
 	IntsaLogo,
 	ProtonMailLogo,
 	TwitterLogo,
-	LinkedInLogo
+	LinkedInLogo,
+	Loading
 }
 
 export default images;
