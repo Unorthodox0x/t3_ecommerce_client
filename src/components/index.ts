@@ -1,8 +1,8 @@
 import NavBar from "./NavBar";
 import MobileMenu from "./MobileMenu";
 
-import Cart from "./Cart";
-import CartItem from "./CartItem";
+import Cart from "./Cart/Cart";
+import CartItem from "./Cart/CartItem";
 
 import GalleryMain from "./Gallery/GalleryMain";
 import GalleryItem from "./Gallery/GalleryItem"; 

@@ -17,7 +17,7 @@ export default function CheckoutForm() {
     const [message, setMessage] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const { email, setOpenStripe, ShippingForm } = useContext(OrderContext);
-    const {mutate:createOrder} = trpc.createOrder.useMutation({});
+    const {  mutate:createOrder } = trpc.createOrder.useMutation();
     const { cart, customerId } = useContext(CartContext);
 
     const handleSubmit = async (e:FormEvent<HTMLFormElement>) => {
@@ -29,7 +29,13 @@ export default function CheckoutForm() {
         }
 
         setIsLoading(true);
-        createOrder({ ShippingForm, cart, customerId });
+        try{
+            createOrder({ ShippingForm: ShippingForm.getValues(), cart, customerId });
+        }catch(err){
+            console.error(err)
+            throw new Error('Order Creation Failed')
+        }
+
         const { error } = await stripe.confirmPayment({
             elements,
             confirmParams: {

@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { OrderContext } from "@/context/OrderContext";
-import { validRegex, validEmail, validZip } from "@/constants/ValidInput";
+import { validRegex, validEmail, validZip, validNumberSimple, validNumberComplex } from "@/constants/ValidInput";
 import CountryList from "@/constants/Countries";
 import {paymentType} from "@/constants/OrderEnums";
 
@@ -106,7 +106,7 @@ export default function ShippingInfo() {
                     </div>
 
                     {/* EMAIL */}
-                    <div className="w-56">
+                    <div className="w-56 pb-3">
                         <input
                             className="p-2 mx-5 mt-2 h-14 w-56"
                             placeholder="Email"
@@ -120,6 +120,25 @@ export default function ShippingInfo() {
                             <span className="text-red-500 mx-6">required*</span>
                         )}
                         {errors.email?.type === "pattern" && (
+                            <span className="text-red-500 mx-6">invalid*</span>
+                        )}
+                    </div>
+
+                    {/* PHONE NUMBER */}
+                    <div className="w-56">
+                        <input
+                            className="p-2 mx-5 mt-2 h-14 w-56"
+                            placeholder="Phone Number"
+                            type="text"
+                            {...register("phone_number", {
+                                required: true,
+                                pattern: validNumberSimple || validNumberComplex,
+                            })}
+                        />
+                        {errors.pnone_number?.type === "required" && (
+                            <span className="text-red-500 mx-6">required*</span>
+                        )}
+                        {errors.pnone_number?.type === "pattern" && (
                             <span className="text-red-500 mx-6">invalid*</span>
                         )}
                     </div>

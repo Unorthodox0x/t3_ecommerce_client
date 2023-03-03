@@ -1,10 +1,11 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useContext} from "react";
+import { CartContext } from "@/context/CartContext";
 import { loadStripe } from "@stripe/stripe-js";
-import {trpc} from "@/utils/trpc";
 
 export default function Confirmation () {
   const [message, setMessage] = useState<string>('');  
   const [loading, setLoading] = useState<boolean>(true);
+  const {emptyCart} = useContext(CartContext);
 
   useEffect(() => {
         const getStatus = async() => {
@@ -21,7 +22,7 @@ export default function Confirmation () {
                   case "succeeded":
                       setMessage("Payment succeeded!");
                       setLoading(false);
-                      localStorage.removeItem("cart");   
+                      emptyCart();
                       break;
                   case "processing":
                       setMessage("Your payment is processing.");

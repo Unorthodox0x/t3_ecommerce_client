@@ -29,8 +29,8 @@ const createOrderProcedure = publicProcedure
         address_one: z.string(),
         address_two: z.string(),
         zip_code: z.string(),
+        phone_number: z.string(),
         payment_method: z.string(),
-        customerId: z.string(),
       }),
       cart: z.object({
         id: z.string(),
@@ -46,16 +46,12 @@ const createOrderProcedure = publicProcedure
       customerId: z.string(),
     }),
   ).mutation( async({input}) => { 
-    
-    //get ids of all items in cart
-    //connect to this order
-    const orderId = v4();
+    //connect items in cart to this order
     const items:{id?:string, orderId?: string}[] = [];
-    input.cart.map((item:ICartItem) => { items.push({id: item.id, orderId: orderId}) })  
+    input.cart.map((item:ICartItem) => { items.push({id: item.id}) })
 
-    await prisma.order.create({
-      data:{
-        id: orderId,
+    return await prisma.order.create({
+      data: {
         email:input.ShippingForm.email,
         firstName:input.ShippingForm.first_name,
         lastName:input.ShippingForm.last_name,
@@ -65,27 +61,13 @@ const createOrderProcedure = publicProcedure
         addressline:input.ShippingForm.address_one,
         addressline2:input.ShippingForm.address_two,
         zipcode:input.ShippingForm.zip_code,
+        phoneNumber: input.ShippingForm.phone_number,
         paymentMethod: input.ShippingForm.payment_method,
         items: { connect: items },
         totalPrice: calculateOrderAmount(input.cart),
         customerId: input.customerId,
       }
     })
-
-    //function call to update all items in order quantity -= 1
-    return;
   });
 
 export default createOrderProcedure;
-
-
-
-// id
-// name
-// img
-// price
-// itemType
-// subType
-// quantity
-// description
-// createdAt

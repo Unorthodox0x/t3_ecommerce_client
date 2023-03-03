@@ -22,7 +22,7 @@ export default function GalleryItem(props:CustomPageProps) {
     const { addItem } = useContext(CartContext);
 
     return (
-        <div className="relative h-GalleryItem w-GalleryItem mx-3 rounded-2xl bg-transparent shadow-3xl preserve-3d group-hover:my-rotate-y-180 duration-1000">
+        <div className="relative h-GalleryItem w-GalleryItem mx-4 rounded-2xl bg-transparent shadow-3xl preserve-3d group-hover:my-rotate-y-180 duration-1000">
 
 			{/* FRONT */}
 			<div className="absolute backface-hidden rounded-2xl h-full w-full bg-gray-200">
@@ -31,8 +31,7 @@ export default function GalleryItem(props:CustomPageProps) {
 					src={item?.img ? item?.img: images.Logo} 
 					alt="Item Image" 
 					className="absolute backface-hidden"
-					height={420}
-					width={420}
+					layout="fill"
 				/>
 				<div className="flex absolute backface-hidden h-full w-full items-start justify-center">
 					<h1 className="flex absolute backface-hidden h-10 w-52 my-8 justify-center items-center text-2xl border-2 border-black bg-gray-300">
@@ -46,7 +45,12 @@ export default function GalleryItem(props:CustomPageProps) {
 				
 				<div className="absolute rounded-2xl h-full w-full bg-gray-200 opacity-30">
 					{/* MAIN ASSET FR - BACKGROUND */}
-					<Image src={images.Logo} alt="Item Image" className="absolute h-full w-full"/>
+					<Image 
+						src={item?.img ? item?.img: images.Logo} 
+						alt="Item Image" 
+						className="absolute h-full w-full"
+						layout="fill"
+					/>
 				</div>
 
 				{/* DESCRIPTION */}

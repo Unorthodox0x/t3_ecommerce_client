@@ -91,7 +91,6 @@ const NavBar: React.FunctionComponent = () => {
 			</div>
 
 			{/* POPUP CART MENU */}
-			{openMenu && (
 				<Popup
 					open={openMenu}
 					className=""
@@ -102,7 +101,6 @@ const NavBar: React.FunctionComponent = () => {
 				>
 					<Cart />
 				</Popup>
-			)}
 
 			{/* POPUP MOBILE MENU */}
 			{openMobile &&  (

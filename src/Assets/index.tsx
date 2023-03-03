@@ -35,7 +35,7 @@ const images = {
 	ProtonMailLogo,
 	TwitterLogo,
 	LinkedInLogo,
-	Loading
+	Loading,
 }
 
 export default images;

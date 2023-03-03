@@ -4,9 +4,9 @@ import Image from "next/image";
 import Router from 'next/router';
 import numeral from "numeral";
 
-import { CartItem } from "./index";
+import { CartItem } from "@/components";
 import images from "@/Assets";
-import {Item} from "@/models/index";
+import {Item} from "@/models";
 
 /**
  * This component is a side menu

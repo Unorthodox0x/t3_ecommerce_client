@@ -11,6 +11,7 @@ export declare interface IShippingForm {
 	address_one: string
 	address_two: string
 	zip_code: string
+	phone_number: string
 }
 
 export declare interface IOrderContext {

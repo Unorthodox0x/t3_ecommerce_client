@@ -2,7 +2,7 @@ import React, { useState, createContext, useEffect } from "react";
 import {
     ICartContext, ICartItem,
     defaultCartContext,
-} from "../models/index"
+} from "@/models"
 import {trpc} from "@/utils/trpc"
 /**
  * This Context is used to collect shipping information from user
@@ -22,7 +22,10 @@ export const CartProvider = ({ children }) => {
     const [clientSecret, setClientSecret] = useState<string>("");
     const [customerId, setCustomerId] = useState<string>("");
 
-    const { data, refetch:refetchStripeIntent } = trpc.StripePaymentIntent.useQuery({ cart });
+    const { data, refetch:refetchStripeIntent } = trpc.StripePaymentIntent.useQuery({ cart },{
+        enabled: cart.length > 0 //don't fetch if no items in cart
+    });
+
     useEffect(()=> {
         if(!data || !data?.clientSecret || !data?.customerId) return
         setClientSecret(data?.clientSecret)
